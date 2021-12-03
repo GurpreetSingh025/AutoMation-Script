@@ -1,81 +1,84 @@
-// node 1_HackerrankAutomation.js --url=https://www.hackerrank.com/ --config=config.json 
+// node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
 
-// npm init -y
-// npm install minimist
-// npm install puppeteer 
-
-let minimist = require("minimist");
-let puppeteer = require("puppeteer");
 let fs = require("fs");
+let minimist = require("minimist");
+let path = require("path");
+let puppeteer = require("puppeteer");
 
-let args = minimist(process.argv);
-
-let configJSON = fs.readFileSync(args.config, "utf-8");
-let configJSO = JSON.parse(configJSON);
+let input = minimist(process.argv);
+let desiredUrl = input.url;
+let configs = fs.readFileSync(input.config);
+let UsableConfig = JSON.parse(configs); 
 
 async function run(){
-    // start the browser
     let browser = await puppeteer.launch({
-        headless: false,
-        args: [
+        defaultViewport : null ,
+        headless : false ,
+        args:[
             '--start-maximized'
-        ],
-        defaultViewport: null
+        ] ,
+        isMobile: false                            
     });
+     
+    let page = await browser.newPage();
+    page.setViewport({width : 1600 , height : 900});
+    await page.goto(input.url);
+    await page.waitForTimeout(3000);
+    await page.click("button.login.pull-right.btn.btn-dark.btn-default.mmT");
 
-    // get the tabs (there is only one tab)
-    let pages = await browser.pages();
-    let page = pages[0];
+    // login to account by automation
+    
+     //typing email and password by automation
+    await page.type("input[placeholder='Your username or email']",UsableConfig.email , {delay : 50});
+    await page.type("input[placeholder='Your password']" , UsableConfig.password , {delay : 50});
+    
+    //pressing to login after typing email and password
+    await page.click("button[type='submit']>div.ui-content.align-icon-right>span.ui-text");
 
-    // open the url
-    await page.goto(args.url);
-
-    // wait and then click on login on page1
-    await page.waitForSelector("a[data-event-action='Login']");
-    await page.click("a[data-event-action='Login']");
-
-    // wait and then click on login on page2
-    await page.waitForSelector("a[href='https://www.hackerrank.com/login']");
-    await page.click("a[href='https://www.hackerrank.com/login']");
-
-    // type userid
-    await page.waitForSelector("input[name='username']");
-    await page.type("input[name='username']", configJSO.userid, {delay:50});
-
-    // type password
-    await page.waitForSelector("input[name='password']");
-    await page.type("input[name='password']", configJSO.password, {delay:50});
-
-    // press click on page3
-    await page.waitForSelector("button[data-analytics='LoginPassword']");
-    await page.click("button[data-analytics='LoginPassword']");
-
-    // click on compete
-    await page.waitForSelector("a[data-analytics='NavBarContests']");
-    await page.click("a[data-analytics='NavBarContests']");
-
-    // click on manage contests
-    await page.waitForSelector("a[href='/administration/contests/']");
+    //After login going to compete section in order to access contests
+    await page.waitForTimeout(5000);
+    await page.click("a[href='/contests']")
+    
+    //going to manage contest section 
+    await page.waitForTimeout(3000);
     await page.click("a[href='/administration/contests/']");
 
-    // click on first contest
-    await page.waitForSelector("p.mmT");
-    await page.click("p.mmT");
+    //Adding moderator 
+   await page.waitForSelector("a.backbone.block-center")
+   let All_Contest_Urls_Of_A_page = await page.$$eval("a.backbone.block-center" , function(aTags){
+    console.log(" content of aTags are : " + aTags);
+       let urls = [];
+       for(let i=0; i<aTags.length ; i++){
+           let url = aTags[i].getAttribute("href");
+           urls.push(url);
+       }      
+       return urls;
+   });
 
-    await page.waitFor(3000);
+   for(let i=0;i<All_Contest_Urls_Of_A_page.length ; i++){       
+       let page2 = await browser.newPage();
+       await page2.setViewport({width : 1600 , height : 900});
+       await page2.bringToFront();
+       await page2.goto("https://www.hackerrank.com"+All_Contest_Urls_Of_A_page[i]);
+       await AddModerator(page2);
+       await page2.close();
+   }
+   
+  // console.log("content is : " + All_Contest_Urls_Of_A_page);
+   await browser.close();
 
-    // click on moderators tab
-    await page.waitForSelector("li[data-tab='moderators']");
+}
+
+async function AddModerator(page){
+    await page.waitForTimeout(4000);
     await page.click("li[data-tab='moderators']");
     
-    // type in moderator
-    await page.waitForSelector("input#moderator");
-    await page.type("input#moderator", configJSO.moderator, {delay: 50});
-
+    for(let i=0; i<UsableConfig.moderator.length ; i++){
+    await page.waitForSelector("input#moderator");        
+    await page.type("input#moderator" , UsableConfig.moderator[i] , {delay : 100});
     await page.keyboard.press("Enter");
+    }  
+    await page.waitForTimeout(2000);    
 }
 
 run();
-
-
-
