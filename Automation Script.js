@@ -1,5 +1,6 @@
-// node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
+// !!! PLEASE ADD YOUR EMAIL AND PASSWORD IN JSON FILE BEFORE RUNNING SCRIPT !!!
 
+// INPUT IN TERMINAL -->  node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
 let fs = require("fs");
 let minimist = require("minimist");
 let path = require("path");
