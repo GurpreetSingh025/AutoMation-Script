@@ -23,10 +23,12 @@ async function run(){
     let page = await browser.newPage();
     page.setViewport({width : 1600 , height : 900});
     await page.goto(input.url);
-    await page.waitForTimeout(3000);
-    await page.click("button.login.pull-right.btn.btn-dark.btn-default.mmT");
 
     // login to account by automation
+
+    await page.waitForSelector("button.login.pull-right.btn.btn-dark.btn-default.mmT");
+    await page.click("button.login.pull-right.btn.btn-dark.btn-default.mmT");
+
     
      //typing email and password by automation
     await page.type("input[placeholder='Your username or email']",UsableConfig.email , {delay : 50});
@@ -36,19 +38,19 @@ async function run(){
     await page.click("button[type='submit']>div.ui-content.align-icon-right>span.ui-text");
 
     //After login going to compete section in order to access contests
-    await page.waitForTimeout(5000);
-    await page.click("a[href='/contests']")
+    await page.waitForTimeout(3000);
+    await page.click("a[href='/contests']");
     
     //going to manage contest section 
-    await page.waitForTimeout(3000);
+    await page.waitForSelector("a[href='/administration/contests/']");
     await page.click("a[href='/administration/contests/']");
 
     //Adding moderator 
    await page.waitForSelector("a.backbone.block-center")
    let All_Contest_Urls_Of_A_page = await page.$$eval("a.backbone.block-center" , function(aTags){
-    console.log(" content of aTags are : " + aTags);
        let urls = [];
        for(let i=0; i<aTags.length ; i++){
+           console.log(aTags[i].textContent)
            let url = aTags[i].getAttribute("href");
            urls.push(url);
        }      
@@ -70,7 +72,7 @@ async function run(){
 }
 
 async function AddModerator(page){
-    await page.waitForTimeout(4000);
+    await page.waitForTimeout(3000);
     await page.click("li[data-tab='moderators']");
     
     for(let i=0; i<UsableConfig.moderator.length ; i++){
