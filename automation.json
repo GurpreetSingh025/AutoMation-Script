@@ -1,0 +1,8 @@
+{
+    "email" : "Enter Your Email Here",
+    "password" : "Enter Your Password Here",
+    "moderator" : [
+        "pepcoding_sumeet",
+        "navdeep_usict"        
+    ]
+}
