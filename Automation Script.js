@@ -1,4 +1,4 @@
-// !!! PLEASE ADD YOUR EMAIL AND PASSWORD IN JSON FILE BEFORE RUNNING SCRIPT ...AND ALSO PUT BELOW INPUT ON TERMINAL!!!
+// !!! PLEASE ADD YOUR EMAIL AND PASSWORD IN automation.json FILE BEFORE RUNNING SCRIPT ...AND ALSO PUT BELOW INPUT ON TERMINAL!!!
 
 // INPUT-->  node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
 let fs = require("fs");
