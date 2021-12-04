@@ -1,6 +1,6 @@
-// !!! PLEASE ADD YOUR EMAIL AND PASSWORD IN JSON FILE BEFORE RUNNING SCRIPT !!!
+// !!! PLEASE ADD YOUR EMAIL AND PASSWORD IN JSON FILE BEFORE RUNNING SCRIPT ...AND ALSO PUT BELOW INPUT ON TERMINAL!!!
 
-// INPUT IN TERMINAL -->  node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
+// INPUT-->  node AutomationProject.js --url="https://www.hackerrank.com/dashboard" --config="automation.json"
 let fs = require("fs");
 let minimist = require("minimist");
 let path = require("path");
